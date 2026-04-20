@@ -133,9 +133,18 @@ def aqi(city: str = Query(..., description="City name to fetch AQI for")) -> dic
         raise HTTPException(status_code=502, detail=str(error)) from error
 
 
-def main() -> None:
+def create_app() -> FastAPI:
+    return app
+
+
+def main() -> FastAPI:
+    # Compatibility for deployments using: uvicorn backend.main:main --factory
+    return app
+
+
+def run_server() -> None:
     uvicorn.run("main:app", host=HOST, port=PORT, reload=False, workers=1)
 
 
 if __name__ == "__main__":
-    main()
+    run_server()

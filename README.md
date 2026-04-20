@@ -36,6 +36,11 @@ AQI/
    .\venv\Scripts\python.exe main.py
    ```
 
+   or with uvicorn directly:
+   ```bash
+   .\venv\Scripts\python.exe -m uvicorn main:app --host 127.0.0.1 --port 8000
+   ```
+
 API endpoints:
 
 - `GET /health`
@@ -61,3 +66,13 @@ API endpoints:
    ```
 
 Open `http://localhost:3000`.
+
+## Render deployment (backend)
+
+Use this start command:
+
+```bash
+uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+```
+
+Do **not** point Render to `backend.main:main` unless using `--factory`.
