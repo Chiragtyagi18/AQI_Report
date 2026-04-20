@@ -13,13 +13,24 @@ API_URL = os.getenv("api_url", "").strip('"')
 API_KEY = os.getenv("api_key", "").strip('"')
 HOST = os.getenv("HOST", "127.0.0.1")
 PORT = int(os.getenv("PORT", "8000"))
+CORS_ORIGINS = os.getenv(
+    "CORS_ORIGINS",
+    "https://aqi-report.vercel.app,http://localhost:3000,http://127.0.0.1:3000",
+)
+
+
+def parse_origins(raw_origins: str) -> list[str]:
+    return [origin.strip() for origin in raw_origins.split(",") if origin.strip()]
+
+
+ALLOWED_ORIGINS = parse_origins(CORS_ORIGINS)
 
 app = FastAPI(title="AQI Backend API", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=False,
-    allow_methods=["GET"],
+    allow_methods=["GET", "OPTIONS"],
     allow_headers=["*"],
 )
 

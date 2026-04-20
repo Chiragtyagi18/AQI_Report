@@ -26,6 +26,7 @@ AQI/
    api_key=YOUR_API_KEY
    HOST=127.0.0.1
    PORT=8000
+   CORS_ORIGINS=https://aqi-report.vercel.app,http://localhost:3000,http://127.0.0.1:3000
    ```
 3. Install dependencies:
    ```bash
@@ -76,3 +77,9 @@ uvicorn backend.main:app --host 0.0.0.0 --port $PORT
 ```
 
 Do **not** point Render to `backend.main:main` unless using `--factory`.
+
+Set Render environment variable:
+
+```env
+CORS_ORIGINS=https://aqi-report.vercel.app
+```
