@@ -18,12 +18,63 @@ type AQIResponse = {
 
 const PIE_COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
+const CITY_SUGGESTIONS = [
+  "Delhi",
+  "Mumbai",
+  "Bengaluru",
+  "Chennai",
+  "Kolkata",
+  "Hyderabad",
+  "Pune",
+  "Ahmedabad",
+  "Jaipur",
+  "Lucknow",
+  "Kanpur",
+  "Nagpur",
+  "Indore",
+  "Bhopal",
+  "Chandigarh",
+  "Amritsar",
+  "Patna",
+  "Ranchi",
+  "Bhubaneswar",
+  "Guwahati",
+  "Srinagar",
+  "Dehradun",
+  "Noida",
+  "Gurugram",
+  "New York",
+  "Los Angeles",
+  "Chicago",
+  "Houston",
+  "San Francisco",
+  "Toronto",
+  "Vancouver",
+  "London",
+  "Paris",
+  "Berlin",
+  "Madrid",
+  "Rome",
+  "Dubai",
+  "Singapore",
+  "Tokyo",
+  "Seoul",
+  "Sydney",
+  "Melbourne",
+];
 
 export default function AQIChatbot() {
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AQIResponse | null>(null);
+  const matchingCities = useMemo(() => {
+    const query = city.trim().toLowerCase();
+    if (query.length < 2) {
+      return [];
+    }
+    return CITY_SUGGESTIONS.filter((cityName) => cityName.toLowerCase().includes(query)).slice(0, 8);
+  }, [city]);
 
   const chartData = useMemo(() => {
     if (!result) {
@@ -100,9 +151,16 @@ export default function AQIChatbot() {
             type="text"
             value={city}
             onChange={(event) => setCity(event.target.value)}
+            list="city-suggestions"
+            autoComplete="off"
             placeholder="Enter city name (e.g. Delhi)"
             className="w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
           />
+          <datalist id="city-suggestions">
+            {matchingCities.map((cityName) => (
+              <option key={cityName} value={cityName} />
+            ))}
+          </datalist>
           <button
             type="submit"
             disabled={loading}
@@ -111,6 +169,7 @@ export default function AQIChatbot() {
             {loading ? "Checking..." : "Check AQI"}
           </button>
         </form>
+        <p className="mt-2 text-xs text-slate-500">Type at least 2 characters to see city suggestions.</p>
 
         {error ? (
           <p className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
